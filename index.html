@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #fff;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: #ff6f61;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #ff3b2f;
+        }
+        #resultado {
+            font-weight: bold;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Calculadora de IMC</h2>
+        <input type="number" id="peso" placeholder="Peso (kg)" step="0.1">
+        <input type="number" id="altura" placeholder="Altura (m)" step="0.01">
+        <button onclick="calcularIMC()">Calcular</button>
+        <p id="resultado"></p>
+    </div>
+
+    <script>
+        function calcularIMC() {
+            let peso = document.getElementById("peso").value;
+            let altura = document.getElementById("altura").value;
+            
+            fetch("http://127.0.0.1:5000/calcular_imc", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ peso: parseFloat(peso), altura: parseFloat(altura) })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("resultado").innerText = `Seu IMC é ${data.imc.toFixed(2)} - ${data.classificacao}`;
+            })
+            .catch(error => console.error("Erro ao calcular IMC:", error));
+        }
+    </script>
+</body>
+</html>
