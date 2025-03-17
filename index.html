@@ -63,17 +63,35 @@
         function calcularIMC() {
             let peso = document.getElementById("peso").value;
             let altura = document.getElementById("altura").value;
-            
-            fetch("http://127.0.0.1:5000/calcular_imc", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ peso: parseFloat(peso), altura: parseFloat(altura) })
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("resultado").innerText = `Seu IMC é ${data.imc.toFixed(2)} - ${data.classificacao}`;
-            })
-            .catch(error => console.error("Erro ao calcular IMC:", error));
+
+            // Verifica se os valores são válidos
+            if (peso === "" || altura === "" || isNaN(peso) || isNaN(altura)) {
+                alert("Por favor, insira valores válidos para peso e altura.");
+                return;
+            }
+
+            // Exibe mensagem de carregamento
+            document.getElementById("resultado").innerText = "Calculando IMC...";
+
+            // Calculando o IMC
+            let imc = peso / (altura * altura);
+
+            // Classificação do IMC
+            let classificacao = "";
+            if (imc < 18.5) {
+                classificacao = "Abaixo do peso";
+            } else if (imc >= 18.5 && imc < 24.9) {
+                classificacao = "Peso normal";
+            } else if (imc >= 25 && imc < 29.9) {
+                classificacao = "Sobrepeso";
+            } else {
+                classificacao = "Obesidade";
+            }
+
+            // Exibe o resultado
+            setTimeout(() => {
+                document.getElementById("resultado").innerText = `Seu IMC é ${imc.toFixed(2)} - ${classificacao}`;
+            }, 1000); // Delay de 1 segundo para mostrar a mensagem de "Carregando..."
         }
     </script>
 </body>
